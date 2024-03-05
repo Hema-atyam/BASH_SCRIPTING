@@ -1,0 +1,54 @@
+#!/bin/bash
+#
+#
+#checking if script is executed by root user
+
+if [[ "${UID}" -ne 0 ]]
+then
+        echo "user cannot be added"
+        exit 1
+fi
+
+#enter the user
+read -p "ENTER THE USER TO BE ADDED:" USERADD
+
+#provide the username
+
+read -p "ENTER THE USERNAME:" USERNAME
+
+# echo "$USERNAME"
+
+#provide the password
+read -p "ENTER THE INITIAL PASSWORD:" PASSWORD
+
+#add the user
+useradd -c "${USERADD}" -m $USERADD
+
+if [[ "${?}" -ne 0 ]]
+then
+        echo "UNABLE TO ADD USER"
+        exit 1
+fi
+
+
+#set the password to the user
+
+echo $PASSWORD | passwd --stdin $USERADD
+
+if [[ "${?}" -ne 0 ]]
+then
+        echo "Couldn't set the password"
+        exit 1
+fi
+
+#change the password after initial login
+
+passwd -e $USERADD
+
+
+#display the details
+#
+
+echo 'username:' "$USERADD"
+
+echo 'password:' "$PASSWORD"
